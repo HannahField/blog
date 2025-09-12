@@ -1,16 +1,39 @@
 ---
-title: 'First post'
-description: 'Lorem ipsum dolor sit amet'
-pubDate: 'Jul 08 2022'
-heroImage: '../../assets/blog-placeholder-3.jpg'
+title: "Figuring out an FPGA"
+description: "A blog/diary of me learning to use the Altera DE2 FPGA"
+pubDate: "Sep 12 2025"
+heroImage: "../../assets/FPGA.jpg"
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+## Introduction
 
-Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc. Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra massa massa ultricies mi.
+Heya. This series of blog posts is about my exploration with the Altera DE2 development and education FPGA board! Why this one? We'll get to it!
 
-Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
+Let's start somewhere else: Why am I even exploring FPGA boards? As an Electrical Engineering student, some of my fields of interest have been:
+- Communication systems
+- Signal processing
+- Programming (Especially low-level things like drivers)
+- The interaction between the physical and digital world
 
-Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id cursus metus aliquam eleifend mi.
 
-Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
+There are other things I've found enjoyable, but they're not super related to Electrical Engineering (things like scientific computing and data analysis come to mind!). A possible way to explore all the above fields is via an FPGA, and thus, the course is set. (I must also say that I have used an FPGA before, in class. Specifically the [Zybo Z7](https://digilent.com/reference/programmable-logic/zybo-z7/start), however, I desire to do some exploration on my own, and so here we are.)
+
+So, FPGAs, where to start? Firstly, finding an actual board seems like a good idea. Luckily, I study at a pretty awesome university, and so they have a giant stock of, well, everything an Electrical Engineer could ever dream of, free to borrow! For FPGAs, there was basically just the one option, [an Altera DE2](https://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=183&No=30&PartNo=1#contents). While it is quite old, it does have some awesome features, including a 16x2 LCD panel. This will do nicely!
+
+## Configurable Clock Counter
+
+Before starting this section properly, I have to admit that this first blog post is written at a later time, since I only got the idea to do this blog afterwards. However, all the later posts will be written during the exploration. With that out of the way, let's begin!
+
+The first thing to do, is to get a good idea for a project! Actually, the real first thing to do, is figure out how to hook up this ancient piece of hardware to modern technology. All the info that came with this thing is from 2006, and on a bloody CD. So:
+
+![One Research Later](../../assets/one_research_later.png)
+
+And we're back. It seems like the best option is [Intel's Quartus II](https://www.intel.com/content/www/us/en/software-kit/711791/intel-quartus-ii-web-edition-design-software-version-13-0sp1-for-windows.html), though it has to be a slightly older version, since they discontinued support for architecture of my FPGA, which is called Cyclone II... Hm. Anyways, let's install it.
+
+![Skeleton waiting at a PC](../../assets/waiting_skeleton.jpg)
+
+Dang that took a while. With that out of the way, it is now time to figure out how to actually use it. I watched [this youtube video](https://www.youtube.com/watch?v=auQ7wpVH-0Q) from 2012, however basically nothing has changed with the software since then. I guess enterprise software has a much longer half-life than basically the rest of the software world. Huh. 
+
+There is just one last thing to do before actually getting started though, there is a choice to be made. What language? I will be using [VHDL](https://en.wikipedia.org/wiki/VHDL), since it's what I used in class. I might try [SystemVerilog](https://en.wikipedia.org/wiki/SystemVerilog) in the future though. However Quartus actually supports surprisingly many Design languages, including basic block diagrams!
+
+# TO BE CONTINUED
