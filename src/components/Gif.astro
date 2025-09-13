@@ -1,0 +1,13 @@
+---
+import { getImage } from "astro:assets";
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+const result = await getImage({ src: url, width: 1, height: 1 });
+---
+
+<video style="max-width: 100%;" autoplay loop muted>
+  <source src={result.src} type="video/mp4" />
+</video>
