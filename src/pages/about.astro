@@ -1,18 +1,39 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import AboutHeroImage from "../assets/us.jpg";
+import Layout from "../layouts/BlogPost.astro";
 ---
 
 <Layout
-	title="About Me"
-	description="It's-a Me"
-	pubDate={new Date('September 12 2025')}
-	heroImage={AboutHeroImage}
-	hidden={false}
+  title="About Me"
+  description="It's-a Me"
+  pubDate={new Date("September 14 2025")}
+  heroImage={AboutHeroImage}
+  hidden={false}
 >
-	<p>
-		yo
-	</p>
-
-
+  <p>
+    Heya, and welcome to my blog! My name is Hannah, I'm 28 years old, and a 3
+    Electrical Engineering student at Aarhus University.
+  </p>
+  <p>
+    My main professional fields of interest are:
+    <ul>
+      <li>Applied Math</li>
+      <li>Communication Systems & Signal Processing</li>
+      <li>Digital Electronics</li>
+      <li>
+        Embedded Programming
+        <ul>
+          <li>Especially FPGA Programming</li>
+        </ul>
+      </li>
+      <li>Scientific Computing & Data Analysis</li>
+    </ul>
+    <p>
+      My favourite programming language is <a href="https://en.wikipedia.org/wiki/Julia_(programming_language)" target="_blank">Julia</a>, though I would like to learn Rust some time, for my more low-level needs and potentially even embedded programming?? Sadly, for now, I mostly use C++. For FPGAs I use VHDL in <a href="https://en.wikipedia.org/wiki/Quartus_Prime" target="_blank">Quartus II</a>, however I would love to one day use open source alternatives, like <a href="https://en.wikipedia.org/wiki/Chisel_(programming_language)" target="_blank">Chisel</a>, instead.
+    </p>
+  </p>
+  <p>
+	I spend most of my free time either reading, playing video games and TTRPGs, or hanging out with my friends, family, and girlfriend of 4 years,
+    <a href="https://www.linkedin.com/in/alexandra-%C3%B8stermark-14a2a3201/" target="_blank">Alexandra.</a>
+  </p>
 </Layout>
