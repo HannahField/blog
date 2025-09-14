@@ -192,8 +192,11 @@ Ah right, gotta remember to assign the pins. And with that, it... still doesn't 
 <Gif url={hex_broken} />
 For one, the order of the switches is wrong. This makes sense, since I am currently
 taking SW0, meaning the right most one, and setting it as the first bit of the number.
-So I just gotta reverse the order of the switches, seems easy: ```vhdl SW : in std_logic_vector(17
-downto 0); ``` Secondly, it seems like the segments are inverted? Just like with
+So I just gotta reverse the order of the switches, seems easy: 
+```vhdl 
+SW : in std_logic_vector(17 downto 0); 
+```
+Secondly, it seems like the segments are inverted? Just like with
 the inverted switches, I have no idea why this is, but it should be an easy fix.
 🤷‍♀️
 <Gif url={hex_working} />
@@ -238,17 +241,16 @@ Good progress! However, I really want to involve the built in clock somehow. Let
 
 ![a woman stretching her arms, interlocker her fingers to crack them as a preparing motion](../../assets/hand_crack_stretch.jpg)
 
-As always, gotta start with importing ieee, declaring what packages we want from it, and then making an entity. This is exactly the same as the other modelling schemes, however, we're gonna be a lil cheeky and turn those 7 HEX std_logic_vectors into one [array of std_logic_vectors](https://stackoverflow.com/questions/56794058/in-vhdl-is-it-possible-to-create-an-array-of-std-logic-vector-without-using-a-t):
+As always, gotta start with importing ieee, declaring what packages we want from it, and then making an entity. This is exactly the same as the other modelling schemes.
 
 ```vhdl
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-
 entity counter is
     port (CLK : in std_logic;
-            HEXS : out std_logic_aoa (0 to 7) (0 to 6));
+    SW : in std_logic_vector(17 downto 0);
+    dir : in std_logic;
+    reset : in std_logic;
+    HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7 : out std_logic_vector(0 to 6) := "1111111");
+            
 end counter;
 ```
 
@@ -290,23 +292,25 @@ counting: process (CLK)
     end if;
 end process;
 ```
+A process is basically an [signal](https://docs.solidjs.com/concepts/signals). Here I'm telling the process that it is sensitive to the signal CLK, meaning any changes in it's value will cause the process to run. In this example, when a change in CLK occurs, it firsts checks if it is a rising edge, then if it is it increments CLK_CNT, then checks if it has been 1 million cycles, and if it has, it increments CNT and resets CLK_CNT.
 
-Here I have hardcoded it such that the counter will tick every 1 million clock cycles, giving a frequency of 50Hz. Later I want to be able to set the counting frequency via the switches on the board. However, for now, we also need a process to actually display CNT:
+Now we just need a process for showing CNT on the displays:
 
 ```vhdl
-    display: process (CNT)
-        begin
-    -- There's gotta be a better way....
-        HEX0 <= num_to_7seg(CNT mod 10);
-        HEX1 <= num_to_7seg((CNT/10) mod 10);
-        HEX2 <= num_to_7seg((CNT/100) mod 10);
-        HEX3 <= num_to_7seg((CNT/1000) mod 10);
-        HEX4 <= num_to_7seg((CNT/10000) mod 10);
-        HEX5 <= num_to_7seg((CNT/100000) mod 10);
-        HEX6 <= num_to_7seg((CNT/1000000) mod 10);
-        HEX7 <= num_to_7seg((CNT/10000000) mod 10);
+display: process (CNT)
+    begin
+-- There's gotta be a better way....
+    HEX0 <= num_to_7seg(CNT mod 10);
+    HEX1 <= num_to_7seg((CNT/10) mod 10);
+    HEX2 <= num_to_7seg((CNT/100) mod 10);
+    HEX3 <= num_to_7seg((CNT/1000) mod 10);
+    HEX4 <= num_to_7seg((CNT/10000) mod 10);
+    HEX5 <= num_to_7seg((CNT/100000) mod 10);
+    HEX6 <= num_to_7seg((CNT/1000000) mod 10);
+    HEX7 <= num_to_7seg((CNT/10000000) mod 10);
     end process;
 ```
+This process is sensitive to CNT, so when any changes to CNT happen, it will run, changing the values on the displays.
 
 Now I just gotta assign the clock, and then put it on the board!
 
