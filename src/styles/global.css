@@ -88,7 +88,7 @@ p {
 	margin-bottom: 1em;
 }
 .prose p {
-	margin-bottom: 2em;
+	margin-bottom: 1em;
 }
 textarea {
 	width: 100%;
@@ -108,6 +108,7 @@ img {
 code {
 	padding: 2px 5px;
 	background-color: rgb(var(--gray-light));
+	font-size: 18px !important;
 	border-radius: 2px;
 }
 pre {
