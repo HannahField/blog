@@ -1,0 +1,41 @@
+---
+title: "Why Julia is the superior oversized caluclator"
+description: "A blog post about the programming language Julia?"
+pubDate: "Sep 18 2025"
+heroImage: "../../assets/Julia.jpg"
+hidden: true
+---
+
+import Gif from "../../components/Gif.astro";
+
+So, you're an engineer or scientist who uses Python or MATLAB for your everyday calculation needs? Well do I have good news for you! Allow me to introduce the programming language of your dreams! It will revolutionize your workflow! Convinced? Let the indoctrination begin!
+
+![Cat rubbing their paws together while giggling evily](../../assets/evil_cat_laughing.jpg)
+
+## What is Julia?
+Julia is an optionally typed general purpose functional programming language. Perhaps we should start by breaking down the three key descriptors:
+
+
+### Optionally typed:
+
+Julia is implicitly typed with optional explicit typing. This is not entirely unique, but the thing that really makes it different, is the type comparability. For implicit types, it is structural, and for explicit types it is nominal. In practice, this means when assigning a variable without an explicit type, you will be able to change that type at runtime, such as: 
+```jl
+    a = 1
+    # >> 1
+    a = "1"
+    # >> "1"
+```
+For explicit, Julia enforces the typing:
+```jl
+    a::Int = 1
+    # >> 1
+    a = "1"
+    # >> MethodError: Cannot `convert` an object 
+    # >> of type String to an object of type Int64
+``` 
+This is a really nice feature when
+The typing is also optional for function definitions:
+
+### Functional:
+
+It's widely debated on the internet exactly what a functional programming language is, and I won't be able to make a precise definition that will make everyone happy. To me, a functional programming language is one that pushes you, the developer, to decouple functions and data. On the internet, you will in this debate often hear about "higher order functions", meaning functions that can take in or return other functions. And while that is important, it is, to me, less important than it promoting a more mathematical way of thinking.
