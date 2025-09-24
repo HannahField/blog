@@ -1,9 +1,9 @@
 ---
-title: "Why Julia is the superior oversized caluclator"
+title: "Why Julia is the oversized calculator for you"
 description: "A blog post about the programming language Julia?"
 pubDate: "Sep 18 2025"
 heroImage: "../../assets/Julia.jpg"
-hidden: true
+hidden: false
 ---
 
 import Gif from "../../components/Gif.astro";
@@ -13,29 +13,122 @@ So, you're an engineer or scientist who uses Python or MATLAB for your everyday 
 ![Cat rubbing their paws together while giggling evily](../../assets/evil_cat_laughing.jpg)
 
 ## What is Julia?
-Julia is an optionally typed general purpose functional programming language. Perhaps we should start by breaking down the three key descriptors:
+Firstly,  if you want an in depth comparison between Julia and Python/Matlab/R, then this isn't it. There are plenty of good blog posts on the internet. This post is about why Julia is good for those of us who mostly do mathematic/scientific computing, not why you shouldn't use Python/Matlab/R (though Julia is superior in every way, just sayin'). 
+
+With that out of the way, Julia is an optionally typed general purpose functional programming language. Perhaps we should start by breaking down the two key descriptors:
 
 
 ### Optionally typed:
 
 Julia is implicitly typed with optional explicit typing. This is not entirely unique, but the thing that really makes it different, is the type comparability. For implicit types, it is structural, and for explicit types it is nominal. In practice, this means when assigning a variable without an explicit type, you will be able to change that type at runtime, such as: 
 ```jl
-    a = 1
-    # >> 1
-    a = "1"
-    # >> "1"
+a = 1
+# >> 1
+a = "1"
+# >> "1"
 ```
 For explicit, Julia enforces the typing:
 ```jl
-    a::Int = 1
-    # >> 1
-    a = "1"
-    # >> MethodError: Cannot `convert` an object 
-    # >> of type String to an object of type Int64
+a::Int = 1
+# >> 1
+a = "1"
+# >> ERROR: MethodError: Cannot `convert` an object 
+# >> of type String to an object of type Int64
 ``` 
-This is a really nice feature when
 The typing is also optional for function definitions:
+
+```jl
+f(x) = x + 1
+f(1)
+# >> 2
+f(1.0)
+# >> 2.0
+f("1")
+# >> ERROR: MethodError: no method matching +(::String, ::Int64)  
+```
+When you don't explicitly say what type the input has, it will allow you to call the function with anything (including other functions), but it may still error if you do an invalid operation given the input, such as the above. However, if you define the input type, you won't even be able to call the function with an otherwise valid input, as such:
+```jl
+f(x::Int)::Int = x + 1
+f(1)
+# >> 2
+f(1.0)
+# >> ERROR: MethodError: no method matching f(::Float64)
+```
+[Abstract types](https://docs.julialang.org/en/v1/manual/types/#man-abstract-types) also exist, such as [number](https://docs.julialang.org/en/v1/base/numbers/), which is a supertype of all the different kinds of default numbers in Julia. Other abstract types such as AbstractString and AbstractVector also exist.
+
 
 ### Functional:
 
 It's widely debated on the internet exactly what a functional programming language is, and I won't be able to make a precise definition that will make everyone happy. To me, a functional programming language is one that pushes you, the developer, to decouple functions and data. On the internet, you will in this debate often hear about "higher order functions", meaning functions that can take in or return other functions. And while that is important, it is, to me, less important than it promoting a more mathematical way of thinking.
+
+So what does Julia do to get you into the mathematical mindset? For one, it does not have classes, only structs, as such:
+
+```jl
+struct Type
+    data1::Int # Optionally typed here too
+    data2::String # Though you should type it
+end
+a = Type(1,"1")
+a.data1
+# >> 1
+```
+All functions are called directly in Julia, there are no method calls. So no more not remembering if it's len(a) or a.len()! 
+
+There are also one-line functions in Julia:
+```jl
+f(x) = x^2
+--------------
+function f(x)
+   return x^2
+end
+```
+These two functions are exactly the same.
+
+Julia also has syntax for [vectorizing functions](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized). This means you can call a function which takes a single input with a vector of that type of input:
+
+```jl
+f(x::Int) = x^2
+a = [1 2 3]
+f(a)
+# >> ERROR: MethodError: no method matching f(::Vector{Int64}) 
+f.(a)
+# >>1×3 Matrix{Int64}:                                                                                                       
+# >> 1  4  9
+```
+While the same thing can be done with map, this notation is incredibly powerful when just using Julia for a simple calculation. Just define your mathematic function, and then all it with all your inputs at once. If your function has several inputs, only one can be vectorized at once.
+
+However, the single best thing Julia has over Python is built in linear algebra, and especially matrix literals.
+
+```jl
+a = [1  1; # You don't need to put them
+     1 -1] # on new lines, it just looks nice.
+a
+# >> 2×2 Matrix{Int64}:                                                                                                       
+#    1  1
+#    1 -1 
+```
+To use most of the linear algebra functions from the standard library, you do need to import it (though you do not need to download any packages, it comes from Julia itself).
+
+```jl
+using LinearAlgebra
+a^-1 # inv(a)
+# >> 2×2 Matrix{Float64}:                                                                                                     
+#    0.5   0.5                                                                                                               
+#    0.5  -0.5
+det(a)
+# >> -2.0
+eigvals(a)
+# >> 2-element Vector{Float64}:                                                                                               
+#   -1.4142135623730951                                                                                                      
+#    1.4142135623730951
+eigvecs(a)
+# >> 2×2 Matrix{Float64}:                                                                                                      
+#    0.382683  -0.92388                                                                                                     
+#    -0.92388  -0.382683
+```
+
+## So who is it for?
+If you are someone who mainly does mathematical/scientific computing, Julia could be a good option for you! Especially if you do compute heavy tasks, since Julia is really fast when typed correctly. Outside of the standard library, it does have many great packages for most of the thing a scientist and engineer could want, such as [Distributions](https://juliastats.org/Distributions.jl/stable/starting/) for probability and statistics, [Makie](https://docs.makie.org/stable/) or [Plots](https://docs.juliaplots.org/stable/) for graphical needs, [FFTW](https://juliamath.github.io/FFTW.jl/stable/) for the fast fourier transform, and many more. And if you can't find a package for it, there is [PythonCall](https://github.com/JuliaPy/PythonCall.jl) for using python packages. Julia also has fantastic support for [Jupiter Lab](https://jupyter.org/), which is incredibly usefull for someone like me, who does a lot of small assignments at university. Lastly, the Julia repl is absolutely fantastic, allowing you to do your most simple calculations from just a terminal, no need to boot up an editor just to write 3 lines of code. To open it, you can either find the julia executionable (press windows key or equivalent on linux (depending on your setup), and type Julia to find it), or just boot up a terminal and type Julia. From here, you can run any one line piece of code you could want! (You can also write code over several lines, like loops, it's just a bit more cumbersome). 
+
+
+The great thing about Julia being a general purpose language, is that if you would one day need to write some actual software, like an HTTP server, or a  [webscraper](https://github.com/HannahField/rr2epub) to turn some text into an epub for easy reading on an e-reader, you can just do that. No need to learn any other language, it does everything! Does this mean you should use it for everything? Well, no. But this blog post is also not aimed at people who write comprehensive backends for large scale software. It's for those of us who mostly need an oversized calculator, who may occasionally want more.
