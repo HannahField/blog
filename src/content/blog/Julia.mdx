@@ -1,7 +1,7 @@
 ---
 title: "Why Julia is the oversized calculator for you"
 description: "A blog post about the programming language Julia?"
-pubDate: "Sep 24 2025"
+pubDate: "Sep 25 2025"
 heroImage: "../../assets/Julia.jpg"
 hidden: false
 ---
@@ -125,6 +125,23 @@ eigvecs(a)
 # >> 2×2 Matrix{Float64}:                                                                                                      
 #    0.382683  -0.92388                                                                                                     
 #    -0.92388  -0.382683
+```
+
+Julia also has support for [multiple dispatch](https://en.wikipedia.org/wiki/Multiple_dispatch), which allows you to define the same function for several different sets of inputs! This also means you can extend existing functions and operators to new types, such as defining plus between two strings:
+
+```jl
+# To overload an operator, you have to explicitly import it
+import Base.+ 
+
+"1" + "2"
+
+# >> ERROR: MethodError: no method matching +(::String, ::String)
+
+# Note that this will error if given a string with not just numbers
+# You could totally implement it better, this is just an example
++(a::String,b::String) = string(tryparse(Int,a) + tryparse(Int,b)) 
+"1" + "2"
+# >> "3"
 ```
 
 ## So who is it for?
