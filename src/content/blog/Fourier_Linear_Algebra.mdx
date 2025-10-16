@@ -1,0 +1,43 @@
+---
+title: "Fourier Analysis: A Linear Algebra Approach"
+description: "Fourier analysis with linear algebra"
+pubDate: "Oct 16 2025"
+heroImage: "../../assets/FPGA.jpg"
+hidden: true
+---
+
+import Gif from "../../components/Gif.astro";
+
+Clickbait title: My [3Blue1Brown](https://www.youtube.com/@3blue1brown) callout post
+
+Nah, Grant (the guy behind the channel) is great, and his videos are genuinely amazing. He does, however, perfectly illustrate my issue with mainstream "pop science" math content. And that is, that it is *too* mainstream. Him, and most other very popular math youtubers, take a very geometric and visual approach, which is great when you're going for a broad appeal, but can counterintively be harmful if you're trying to learn in a more professional setting (like university). 
+
+This actually happened to me, specifically with 3Blue1Brown, when I was first doing my linear algebra course some years ago. Picture this; An over-eager 2nd semester physics student, about to have their first *proper* math course (Linear Algebra). What does she do in preparation? Well, she of course binges the very popular video series by this new math channel she just discovered, 3Blue1Brown, on that very subject! How handy! Well imagine my surprise when I had my first lecture, and there were no mentions of matrices, and no awesome animations of shifting coordinate grids. Instead, it's all just sets of linear equations! And here comes my gripe with that particular video series; it is called the "essence of linear algebra", but is focused entirely on a geometric view. And thus, I feel like it misses the (to me) *actual* essence of linear algebra. The algebraic manipulation of systems that behave linearly. 
+
+I will not be spending too much time on explaining what linear algebra is, I'm assuming that you have at least a base understanding of it, though I will go through the core concepts needed to derive fourier analysis.
+
+## Linearity
+
+I keep using this word, linear, but what does it actually mean? Those with a high school level understanding of math will probably be thinking of straight lines, the classic $$f(x) = ax+b$$, and while that isn't *wrong*, it is very far from the full picture. So here is the most basic idea of linearity; If you have an operator, $$L(x)$$, it is said to be linear if the following holds:
+
+$$
+L(a \cdot x) = a \cdot L(x)
+\newline
+L(x+y) = L(x) + L(y)
+$$
+
+What is a, x, and y? Well, a is what is called a scalar, which is what normal people call "a number". And what about x and y? They're what's called "vectors". What's a vector? Weeellllll, it's *complicated*. To many, a vector is simply a collection of numbers in a list, but to be able to derive fourier analysis, we have to be a little bit more general. A vector is an element of a vector space. Huh. Okay, but what's a vector space? Well, it's a set of elements that obey certain properties. Oh.
+
+![Confused spongebob reading book meme](../../assets/vectors_spongebob.jpg)
+
+So that's kind of unhelpful. Understanding exactly what a vector is will require a full university level course, and I will not be going into *that* much detail here. For this blog post, it is sufficient to know of two types of vector spaces; $$ℝ^n$$ and $$L^2[a,b]$$ (pronounced R n and L-square). $$ℝ^n$$ is the classic collection of vectors we all know and love. It is a list of n numbers. 
+
+$$L^2$$ is a little different. It is the collection of all functions, f(x), that take a real number, $$a < x < b$$, and return a complex number, and which fullfill the following property:
+
+$$
+\int_a^b |f(x)|^2 dx < \infty
+$$
+
+That seems oddly specific, but there is a good reason for this last condition. But before we get to that, there is a concept we must review first; the dot product.
+
+## The Inner Product
