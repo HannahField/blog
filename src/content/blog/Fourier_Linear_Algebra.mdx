@@ -125,13 +125,13 @@ I'm going to say some words, and then we'll go through what it means after: The 
 $$
 f(t) \in \left\{\sqrt{\frac{w}{2\pi}},\sqrt{\frac{w}{\pi}}\textrm{sin}(kwt),\sqrt{\frac{w}{\pi}}\textrm{cos}(kwt)\right\}
 $$
-For all values of $$k \in [1,2,3....]$$, with $w=\frac{2\pi}{t_1 - t_0}$, such that sin(kwt),cos(kwt) will always complete k cycles in the range $[t_0,t_1]$, form an orthonormal basis of $$L^2[t_0,t_1]$$:
+For all values of $$k \in [1,2,3....]$$, with $w=\frac{2\pi}{t_1 - t_0}$, such that sin$(kwt)$,cos$(kwt)$ will always complete a whole number of cycles in the range $[t_0,t_1]$, form an orthonormal basis of $$L^2[t_0,t_1]$$:
 
 ![Projection of one vector onto another](../../assets/basis.png)
 
-Firstly, yes, $f(t) = \sqrt{\frac{w}{2\pi}}$ is a valid function of $t$. Remember that $w$ is just a number determined by $[t_0,t_1]$. Secondly, what the hell is an "ortonormal basis". Let's start with that second word, basis. Essentially (and I'm skipping a lot of detail here), it's a set of vectors in a vector space, such that you can reach any other vectors in that space via a weighted sum of the basis vectors. The simplest example is $$\boldsymbol{e_1} = [1,0], \boldsymbol{e_2} = [0,1]$$ of $$ℝ^2$$. You can reach any 2 dimensional vector as a weighted sum of those two:
+Firstly, yes, $f(t) = \sqrt{\frac{w}{2\pi}}$ is a valid function of $t$. Remember that $w$ is just a number determined by $[t_0,t_1]$. Secondly, what the hell is an "ortonormal basis". Let's start with that second word, basis. Essentially it's a set of vectors in a vector space, such that you can reach any other vectors in that space via a weighted sum of the basis vectors. The simplest example is the normal axis of the 2 dimensional coordinate system, $$\boldsymbol{x} = [1,0], \boldsymbol{y} = [0,1]$$ of $ℝ^2$. You can reach any 2 dimensional vector as a weighted sum of those two:
 $$
-[x,y] = x\boldsymbol{e_1} + y\boldsymbol{e_2}
+[a,b] = a\boldsymbol{x} + b\boldsymbol{y}
 $$
 Orthonormal means a set of vectors are both orthogonal, and normal. A vector is normal if it has length 1, i.e.:
 $$
@@ -145,22 +145,10 @@ For $$ℝ^n$$, orthogonal means they're perpendicular:
 $$
 \langle \boldsymbol{u}, \boldsymbol{v} \rangle = 0
 $$
-Wait sine and cosine are perpendicular? Well, kinda. At least by the definition of perpendicularity. That may sound odd, but it is exceedingly useful. And just to prove it real quick:
+So the above basis consisting of a constant term, an infinte set of sines and cosines, form an orthonormal basis in $L^2$. Does that mean sine and cosine are perpendicular?
+Well, kinda. At least by this definition of perpendicularity. That may sound odd, but it is exceedingly useful. It is fairly trivial to prove that this set of basis vectors are orthonormal, but it's honestly just kind of a mess of symbols. [For the curious reader, here's a small hint for how to do it yourself](https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Product-to-sum_and_sum-to-product_identities).
 
-$$
-\begin{align*}
-\langle \textrm{cos(nwt)},\textrm{cos(mwt)} \rangle &= \int_{t_0}^{t_1} \textrm{cos(nwt)cos(mwt)}dt
-\newline
-&=\int_{t_0}^{t_1}\frac{1}{2}\textrm{cos((n-m)wt)+cos((n+m)wt)}dt
-\end{align*}
-$$
-The integral over a whole number multiple of a full period of a sine or cosine is zero, so the only values of n,m that are different from zero is when $n=m$. Thus, the above integral is zero for all $n \neq m$. It is fairly trivial to show that the same is true for all sines, and for the cross of all sines and cosines. 
-
-The last fact we're missing, is that the inner product is a linear operator itself:
-$$
-\langle af+bg,h\rangle = a\langle f,h\rangle + b\langle g,h \rangle
-$$
-Perhaps you see where this is going. Firstly, to simplify the math, we will be working in $L^2[0,1]$, but the following still applies without loss of generality. This means our basis functions become:
+Firstly, to simplify the math, we will be working in $L^2[0,1]$, but the following still applies without loss of generality. This means our basis functions become:
 
 $$
 f(t) \in \left\{1,\sqrt{2}\textrm{sin}(2\pi kt),\sqrt{2}\textrm{cos}(2\pi kt)\right\}
@@ -225,7 +213,7 @@ s(t)_{onto_{exp}} &= \frac{\left \langle s(t) ,e^{2\pi i k t} \right \rangle}{\l
 &= \left (\int_0^1 s(t) e^{-2\pi i k t} \right) e^{2\pi i k t}
 \end{align*}
 $$
-Where we'll call the stuff in the parentheses $c_k$. Note the sign of the exponential in the integral. This is due to the fact that you take the complex conugate of the second argument in the inner product, and the complex conjugate of a complex exponential is: $\overline{e^{ix}} = e^{-ix}$.
+Where we'll call the stuff in the parentheses $c_k$. Note the sign of the exponential in the integral. This is due to the fact that you take the complex conjugate of the second argument in the inner product, and the complex conjugate of a complex exponential is: $\overline{e^{ix}} = e^{-ix}$.
 
 We may now rewrite $s(t)$ as this projection, like we did before:
 $$
@@ -234,4 +222,25 @@ s(t) &= \sum_{k=-\infty}^{\infty} c_k e^{2\pi i k t},
 \newline
 c_k &= \int_0^1s(t)dt
 \end{align*}
+$$
+If you're at all familiar with the fourier series, you've probably seen it written on this form. However, we can very easily switch between the two sets of basis. To go from the complex exponentials to the set of sines and cosines, you can use the following formulas:
+$$
+\begin{align*}
+a_0 &= c_0
+\newline
+a_k &= c_k + c_{-k}
+\newline
+b_k &= i(c_k - c_{-k})
+\end{align*}
+$$
+And to go the other way, you can use:
+$$
+c_n = 
+\left \{
+\begin{array}{ll}
+       \frac{1}{2} (a_n - ib_n) & n > 0 \\
+       a_0 & n = 0 \\
+       \frac{1}{2} (a_{-n} - ib_{-n}) & n < 0 \\
+\end{array}
+\right.
 $$
