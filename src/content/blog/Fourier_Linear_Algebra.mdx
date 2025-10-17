@@ -1,8 +1,8 @@
 ---
-title: "Fourier Analysis: A Linear Algebra Approach"
+title: "The Fourier Series: A Linear Algebra Approach"
 description: "Fourier analysis with linear algebra"
 pubDate: "Oct 16 2025"
-heroImage: "../../assets/FPGA.jpg"
+heroImage: "../../assets/3b1b_clickbait.jpg"
 hidden: true
 ---
 
@@ -66,7 +66,7 @@ Which fits well with our intuition from pythagoras. We will now define the lengt
 $$
 |\boldsymbol{u}| = \sqrt{\langle \boldsymbol{u},\boldsymbol{u} \rangle}
 $$
-I will now define the inner product for the $$L^2$$ vector space (the weird one that is a collection of functions), and then I will attempt to justify it afterwards, but to be completely honest, I don't entirely know where it came from. **BUT**, with that said, it is an awefully useful definition, and it is that from which the fourier series falls out of!
+I will now define the inner product for the $$L^2$$ vector space (the weird one that is a collection of functions), but to be completely honest, I don't entirely know where it came from. *HOWEVER*, with that said, it is an awefully useful definition, and it is that from which the fourier series falls out of!
 
 $$
 \langle f,g \rangle = \int_a^b f(x) \overline{g(x)}dx
@@ -78,20 +78,12 @@ With this definition of the inner product, we can now rewrite the criterion as:
 $$
 \langle f,f \rangle  = \int_a^b |f(x)|^2 dx < \infty
 $$
-So the criterion is that the functions in $$L^2$$ have finite length. 
-
-In the field of signal analysis, we have the concept of an energy signal and a power signal. In general, we say that the energy of a signal, $s(t)$ is proportional to it's square integral:
+So the criterion is that the functions in $$L^2$$ have finite length. In signal analysis, this length has another interpretation. It's proportional to the energy of a signal:
 
 $$
-E \propto \int_{t_0}^{t_1}s(t)^2 dt
+E \propto \int_0^T s(t)^2 dt = \langle s(t),s(t) \rangle
 $$
-
-And the power is then:
-
-$$
-P \propto \frac{1}{t_1 - t_0}\int_{t_0}^{t_1}s(t)^2 dt
-$$
-We say a signal is an energy signal, if it's energy is finite, and it's a power signal if it's energy is infinite, but power is finite. That first integral may look suspiciously like the $L^2[t_0,t_1]$ inner product, which would be because it is. So $L^2[t_0,t_1]$ is the collection of all energy signals. To do a bit of foreshadowing, we consider energy signals when doing the fourier series, and power signals when doing the fourier transform. What do all those words mean? We'll get to it!
+Luckily, in the real world, a signal cannot have infinte energy, and thus almost all real world signals fall into the $L^2$ vector space.
 
 ## Projections
 There is just one more concept we need to touch on before we're ready to tackle fourier analysis, and it is, as the heading suggests, projections. 
@@ -246,3 +238,4 @@ c_n =
 \end{array}
 \right.
 $$
+And there you have it, we have now derived the fourier series. One really important thing to note though, is that this only works for periodic signals, since the recreation is periodic with periodicity $T$. *Technically* it also works for functions that are only defined on the range $[t_0,t_1]$, but the recreation will then still be repeating for values of $t$ outside that range. This means that the fourier series cannot deal with signals that are defined over infinte time (so not real signals, but some analytical systems do exist over infinte time). To analyse functions that are either aperoidic (so non-repeating) or infinte in the input dimension, we must turn to the fourier transform.
