@@ -1,9 +1,9 @@
 ---
-title: "The Fourier Series: A Linear Algebra Approach"
+title: "Fourier Analysis: A Linear Algebra Approach"
 description: "Fourier analysis with linear algebra"
 pubDate: "Oct 16 2025"
 heroImage: "../../assets/3b1b_clickbait.jpg"
-hidden: true
+hidden: false
 ---
 
 import Gif from "../../components/Gif.astro";
@@ -14,7 +14,13 @@ Nah, Grant (the guy behind the channel) is great, and his videos are genuinely a
 
 This actually happened to me, specifically with 3Blue1Brown, when I was first doing my linear algebra course some years ago. Picture this; An over-eager 2nd semester physics student, about to have their first *proper* math course (Linear Algebra). What does she do in preparation? Well, she of course binges the very popular video series by this new math channel she just discovered, 3Blue1Brown, on that very subject! How handy! Well imagine my surprise when I had my first lecture, and there were no mentions of matrices, and no awesome animations of shifting coordinate grids. Instead, it's all just sets of linear equations! And here comes my gripe with that particular video series; it is called the "essence of linear algebra", but is focused entirely on a geometric view. And thus, I feel like it misses the (to me) *actual* essence of linear algebra. The algebraic manipulation of systems that behave linearly. 
 
-I will not be spending too much time on explaining what linear algebra is, I'm assuming that you have at least a base understanding of it, though I will go through the core concepts needed to derive fourier analysis.
+With that exposition out of the way, it might be prudent of me to actually explain what Fourier Analysis even is. The idea is to ask: Can you rewrite any function as a sum of sines and cosines? This question was asked by French mathematician [Joseph Fourier](https://en.wikipedia.org/wiki/Joseph_Fourier), when he was trying to figure out how heat diffuses through any object, using the [heat equation](https://en.wikipedia.org/wiki/Heat_equation). It turned out that he could solve this problem only when the initial heat distribution was a sine or cosine. And so he naturally asked our question; Can you rewrite any function as a sum of sines and cosines? And thus, the field of Fourier Analysis arose.
+
+Another more mainstream example of where Fourier Analysis is very appropriate is sound. Ours ears actually naturally does this frequency decomposition, where we are able to distinguish a single signal (air pressure at any time), into a sum of pure tones. You can even try it yourself using this [interactive tool](https://academo.org/demos/wave-interference-beat-frequency/), just remember to tick the box that says "Sound on/off". 
+
+In general, Fourier Analysis is an incredibly useful tool in many highly technical STEM fields, including my own world of Electrical Engineering. I do also think that understanding the base concepts can be a bit of a paradigm shift in how you view the world, as you might start seeing how basically anything around you can be written as a sum of waves.
+
+I will not be spending too much time on explaining what linear algebra is, so if you don't have any prior knowledge, there will be some things you're just gonna have to accept. I do require you at least have a base understanding of calculus though, and especially intergrals, as they are the key to Fourier Analysis.
 
 ## Linearity
 
@@ -78,12 +84,7 @@ With this definition of the inner product, we can now rewrite the criterion as:
 $$
 \langle f,f \rangle  = \int_a^b |f(x)|^2 dx < \infty
 $$
-So the criterion is that the functions in $$L^2$$ have finite length. In signal analysis, this length has another interpretation. It's proportional to the energy of a signal:
-
-$$
-E \propto \int_0^T s(t)^2 dt = \langle s(t),s(t) \rangle
-$$
-Luckily, in the real world, a signal cannot have infinte energy, and thus almost all real world signals fall into the $L^2$ vector space.
+So the criterion is that the functions in $$L^2$$ have finite length, for this definition of length.
 
 ## Projections
 There is just one more concept we need to touch on before we're ready to tackle fourier analysis, and it is, as the heading suggests, projections. 
@@ -212,11 +213,13 @@ Where we'll call the stuff in the parentheses $c_k$. Note the sign of the expone
 We may now rewrite $s(t)$ as this projection, like we did before:
 $$
 \begin{align*}
-s(t) &= \sum_{k=-\infty}^{\infty} c_k e^{2\pi i k t},
+s(t) &= \sum_{k=-\infty}^{\infty} c_k e^{\frac{2\pi i k}{T} t},
 \newline
-c_k &= \frac{1}{T}\int_T s(t) e^{-2\pi i k t} dt
+c_k &= \frac{1}{T}\int_T s(t) e^{-\frac{2\pi i k}{T} t} dt
 \end{align*}
 $$
+The first line is generally referred to as the Synthesis equation, and the second line the Analysis equation. 
+
 If you're at all familiar with the fourier series, then this is probably how you've seen it written. However, we can very easily switch between the two sets of basis. To go from the complex exponentials to the set of sines and cosines, you can use the following formulas:
 $$
 \begin{align*}
@@ -229,13 +232,94 @@ b_k &= i(c_k - c_{-k})
 $$
 And to go the other way, you can use:
 $$
-c_n = 
+c_k = 
 \left \{
 \begin{array}{ll}
-       \frac{1}{2} (a_n - ib_n) & n > 0 \\
-       a_0 & n = 0 \\
-       \frac{1}{2} (a_{-n} - ib_{-n}) & n < 0 \\
+       \frac{1}{2} (a_k - ib_k) & k > 0 \\
+       a_0 & k = 0 \\
+       \frac{1}{2} (a_{-k} - ib_{-k}) & k < 0 \\
 \end{array}
 \right.
 $$
-And there you have it, we have now derived the fourier series. One really important thing to note though, is that this only works for periodic signals, since the recreation is periodic with periodicity $T$. *Technically* it also works for functions that are only defined on the range $[t_0,t_1]$, but the recreation will then still be repeating for values of $t$ outside that range. This means that the fourier series cannot deal with signals that are defined over infinte time (so not real signals, but some analytical systems do exist over infinte time). To analyse functions that are either aperoidic (so non-repeating) or infinte in the input dimension, we must turn to the fourier transform.
+And there you have it, we have now derived the fourier series. One really important thing to note though, is that this only works for periodic signals, since the recreation is periodic with periodicity $T$. *Technically* it also works for functions that are only defined on the range $[t_0,t_1]$, but the recreation will then still be repeating for values of $t$ outside that range. This means that the fourier series cannot deal with signals that are defined over infinte time. To analyse functions that are either aperoidic (so non-repeating) or infinte in the input dimension, we must turn to the fourier transform.
+
+## The Fourier transform
+So let's do it! One small heads up first though. The Fourier Transform does not fit into the tradition definition of the $L^2$ vector space, since it's set of basis vectors is $e^{iwt}$ for all values $t \in [-\infty,\infty]$. But we can still tease it out from the complex exponential definition of the Fourier Series, by considering the limiting behaviour as $T \rightarrow \infty$.
+
+Let's consider the vector space $L^2[-\frac{T}{2},\frac{T}{2}]$, such that the length of the range is still $T$. So the Analysis equation from before become:
+
+$$
+\begin{align*}
+c_k &= \frac{1}{T}\int_{-T/2}^{T/2} s(t) e^{-\frac{2\pi i k}{T} t} dt
+\end{align*}
+$$
+We're going to manipulate this equation slightly. Firstly, by multiplying both sides by T, and secondly by introducing a new variable for the exponential, $\Delta w = \frac{2\pi}{T}$
+
+$$
+\begin{align*}
+Tc_k &= \int_{-T/2}^{T/2} s(t) e^{-i k \Delta w t} dt
+\end{align*}
+$$
+Now, consider the limiting behaviour of the right hand side as we let $T \rightarrow \infty$. This means our integral is over infinite time, allowing our signal to be infinite in time. It also implies that $\Delta w$ becomes infinitely small, and so by calculus convention, we're going to rename it $dw$. We're then going to immediately get rid of it by defining a new continous variable $w = kdw$
+
+$$
+\begin{align*}
+T c_k &= \int_{-\infty}^{\infty} s(t) e^{-i w t} dt
+\newline
+S(w) &= \int_{-\infty}^{\infty} s(t) e^{-i w t} dt
+\end{align*}
+$$
+And that last line *is* the Fourier Transform. It is convention to capitalize the name of the function you're Fourier Transforming. The notation you'll often see in literature is:
+$$
+S(w) = ℱ[s(t)]
+$$
+
+The last thing to do is find the Inverse Fourier Transform. Consider the Synthesis equation from before:
+$$
+    s(t) = \sum_{k=-\infty}^{\infty} c_k e^{\frac{2\pi i k}{T} t}
+$$
+Now substitute $c_k = \frac{S(w)}{T}$ and $T = \frac{2\pi}{\Delta w}$:
+$$
+    s(t) = \frac{1}{2\pi} \sum_{k=-\infty}^{\infty} S(w) e^{i \Delta w k t} \Delta w
+$$
+Again, consider the limiting behaviour as we let $T \rightarrow \infty$, such that $\Delta w = dw$:
+
+$$
+s(t) = \frac{1}{2\pi} \sum_{k=-\infty}^{\infty} S(w) e^{i w t} dw
+$$
+The sum is the definition of the [Reimann Integral](https://en.wikipedia.org/wiki/Riemann_integral), so substituting the sum for an integral yields:
+$$
+s(t) = \frac{1}{2\pi} \int_{-\infty}^{\infty} S(w) e^{i w t} dw
+$$
+And that right there *is* the Inverse Fourier Transform, often denoted in the literature as:
+$$
+s(t) = ℱ^{-1}[S(w)]
+$$
+
+## Other Basis Functions
+Since Fourier Analysis is basically just projections of functions in the $L^2$ vectors space, why did we choose to use sines and cosines (or complex exponentials), and not some other infinte family of functions? For one, there is the whole physical intuition in terms of things like sound being a sum of pure tones, but there is also a good mathematical reason. The set of sines and cosines are naturally orthogonal for any choice of region $[t_0,t_1]$. This is not at all true for most other sets of basis functions you might choose, like the set of powers. Consider the set of functions in $L^2[t_0,t_1]$:
+$$
+f(t) \in [t^k], k \in \{ 0, 1, 2, ...\}
+$$
+It is fairly trivial to show that this set is not orthogonal:
+$$
+\begin{align*}
+f(t) &= t^n
+\newline
+g(t) &= t^m
+\newline
+\langle f(t),g(t) \rangle &= \int_{t_0}^{t_1}t^n t^m dt 
+\newline
+&= \int_{t_0}^{t_1}t^{n+m}dt 
+\newline
+&= \frac{1}{n+m+1}[t^{n+m+1}]_{t_0}^{t_1}
+\newline
+&= \frac{t_1^{n+m+1}-t_0^{n+m+1}}{n+m+1}
+\end{align*}
+$$
+It should be fairly obvious that the above is, in fact, not equal to zero for any choice of $[t_0,t_1]$ and for $n \ne m$. 
+
+It is possible to create an orthogonal basis of polynomials, but it will: 1) be a mess, and 2) depend on your choice of $[t_0,t_1]$. How you would go about it is beyond the scope of this blog post, but the eager reader may want to check out the [Gram-Schmidt process](https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process).
+
+## Why Care?
+If you're someone who just engages in mathematics recreationally, for example via popular youtube channels, then the general geometric approach of many videos is probably fine. But if you actually do it professionally, such as myself, then I believe it's a really good idea to have an at least superficial idea of the algebra behind it. And I don't just mean for Fourier Analysis or Linear Algebra, but for all mathematical tools you may use professionally. Knowing how and why something works, on a deeper more intuitive level, allows you to manipulate and apply it far more broadly.
