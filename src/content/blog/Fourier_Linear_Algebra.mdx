@@ -10,7 +10,7 @@ import Gif from "../../components/Gif.astro";
 
 Clickbait title: My [3Blue1Brown](https://www.youtube.com/@3blue1brown) callout post
 
-Nah, Grant (the guy behind the channel) is great, and his videos are genuinely amazing. He does, however, perfectly illustrate my issue with mainstream "pop science" math content. And that is, that it is *too* mainstream. Him, and most other very popular math youtubers, take a very geometric and visual approach, which is great when you're going for a broad appeal, but can counterintively be harmful if you're trying to learn in a more professional setting (like university). 
+Nah, Grant (the guy behind the channel) is great, and his videos are genuinely amazing. He does, however, perfectly illustrate my issue with mainstream "pop science" math content. And that is, that it is *too* mainstream. Him, and most other very popular math youtubers, take a very geometric and visual approach, which is great when you're going for a broad appeal, but can counterintuively be harmful if you're trying to learn in a more professional setting (like university). 
 
 This actually happened to me, specifically with 3Blue1Brown, when I was first doing my linear algebra course some years ago. Picture this; An over-eager 2nd semester physics student, about to have their first *proper* math course (Linear Algebra). What does she do in preparation? Well, she of course binges the very popular video series by this new math channel she just discovered, 3Blue1Brown, on that very subject! How handy! Well imagine my surprise when I had my first lecture, and there were no mentions of matrices, and no awesome animations of shifting coordinate grids. Instead, it's all just sets of linear equations! And here comes my gripe with that particular video series; it is called the "essence of linear algebra", but is focused entirely on a geometric view. And thus, I feel like it misses the (to me) *actual* essence of linear algebra. The algebraic manipulation of systems that behave linearly. 
 
@@ -260,7 +260,7 @@ $$
 Tc_k &= \int_{-T/2}^{T/2} s(t) e^{-i k \Delta w t} dt
 \end{align*}
 $$
-Now, consider the limiting behaviour of the right hand side as we let $T \rightarrow \infty$. This means our integral is over infinite time, allowing our signal to be infinite in time. It also implies that $\Delta w$ becomes infinitely small, and so by calculus convention, we're going to rename it $dw$. We're then going to immediately get rid of it by defining a new continous variable $w = kdw$
+Now, consider the limiting behaviour of the right hand side as we let $T \rightarrow \infty$. This means our integral is over infinite time, allowing our signal to be infinite in time. It also implies that $\Delta w$ becomes infinitely small, and so by calculus convention, we're going to rename it $dw$. We're then going to immediately get rid of it by defining a new continous variable $w = kdw$.
 
 $$
 \begin{align*}
@@ -269,7 +269,9 @@ T c_k &= \int_{-\infty}^{\infty} s(t) e^{-i w t} dt
 S(w) &= \int_{-\infty}^{\infty} s(t) e^{-i w t} dt
 \end{align*}
 $$
-And that last line *is* the Fourier Transform. It is convention to capitalize the name of the function you're Fourier Transforming. The notation you'll often see in literature is:
+And that last line *is* the Fourier Transform. It is convention to capitalize the name of the function you're Fourier Transforming. For those who aren't familiar, the above variable substitution is called the angular frequency $w$, and it's measured in $\frac{\textrm{radians}}{\textrm{s}}$. It's often used when working with sines and cosines, and is related to the classical frequency by $f = \frac{w}{2\pi}$, which as units of Hertz [Hz].
+
+The notation you'll often see in literature is:
 $$
 S(w) = ℱ[s(t)]
 $$
