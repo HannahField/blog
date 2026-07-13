@@ -38,7 +38,7 @@ What is a, u, and v? Well, a is what is called a scalar, which is what normal pe
 
 So that's kind of unhelpful. Understanding exactly what a vector is will require a full university level course, and I will not be going into *that* much detail here. For this blog post, it is sufficient to know of two types of vector spaces; $$ℝ^n$$ and $$L^2[a,b]$$ (pronounced R n and L-square). $$ℝ^n$$ is the classic collection of vectors we all know and love. It is a list of n numbers. 
 
-$$L^2$$ is a little different. It is the collection of all functions, f(x), that take a real number, $$a < x < b$$, and return a complex number, and which fullfill the following property:
+$$L^2$$ is a little different. It is the collection of all functions, f(x), that take a real number, $$a < x < b$$, and return a complex number, and which fulfill the following property:
 
 $$
 \int_a^b |f(x)|^2 dx < \infty
@@ -48,7 +48,7 @@ The above inequality may seem quite intimidating, but it's *integral* to underst
 But first, we must take a small detour to talk about the normal vector dot product.
 
 ## The Inner Product
-Okay I lied. It's called the inner product. The dot product is simply the specific term for the inner product for the $$ℝ^n$$ vector spaces. The generalized inner product equation is:
+Okay I lied. It's called the inner product. The dot product is simply the specific term for the inner product for the $$ℝ^n$$ vector spaces. So let's first talk about them. The generalized dot product equation is:
 $$
 \langle \boldsymbol{u},\boldsymbol{v} \rangle = |\boldsymbol{u}||\boldsymbol{v}|cos(\theta)
 $$
@@ -72,7 +72,7 @@ Which fits well with our intuition from pythagoras. We will now define the lengt
 $$
 |\boldsymbol{u}| = \sqrt{\langle \boldsymbol{u},\boldsymbol{u} \rangle}
 $$
-I will now define the inner product for the $$L^2$$ vector space (the weird one that is a collection of functions), but to be completely honest, I don't entirely know where it came from. *HOWEVER*, with that said, it is an awefully useful definition, and it is that from which the fourier series falls out of!
+I will now define the inner product for the $$L^2$$ vector space (the weird one that is a collection of functions), but to be completely honest, I don't entirely know where it came from. *HOWEVER*, with that said, it is an awfully useful definition, and it is that from which the fourier series falls out of!
 
 $$
 \langle f,g \rangle = \int_a^b f(x) \overline{g(x)}dx
@@ -110,7 +110,7 @@ $$
 \boldsymbol{w} = \frac{3\cdot1 + 1\cdot 1}{1\cdot1+1\cdot1} \boldsymbol{u} + \frac{3\cdot1 + 1\cdot (-1)}{1\cdot1+(-1)\cdot(-1)} \boldsymbol{v}
 $$
 $$
-\boldsymbol{w} = 2 \boldsymbol{u} - 1\boldsymbol{v} = 2[1,1] + [1,-1] = [3,1]
+\boldsymbol{w} = 2 \boldsymbol{u} + 1\boldsymbol{v} = 2[1,1] + [1,-1] = [3,1]
 $$
 ## The Fourier Series
 I'm going to say some words, and then we'll go through what it means after: The set of functions below form an orthonormal basis in $L^2[t_0,t_1]$
@@ -181,13 +181,13 @@ Which we will call $a_0$. We now have a recipe for rewriting our function $s(t)$
 
 $$
 \begin{align*}
-s(t) &= a_0 + \sum_{k=1}^\infty a_k \textrm{cos}(2\pi k t) + \sum_{k=1}^\infty b_k \textrm{sin}(2\pi k t),
+s(t) &= a_0 + \sum_{k=1}^\infty a_k \textrm{cos}\left(\frac{2\pi}{T} k t\right) + \sum_{k=1}^\infty b_k \textrm{sin}\left(\frac{2\pi}{T} k t\right),
 \newline
-a_0 &= \frac{1}{T}\int_Ts(t)dt
+a_0 &= \frac{1}{T}\int_{t_0}^{t_0+T}s(t)dt
 \newline
-a_k &= \frac{2}{T}\int_Ts(t)\textrm{cos}\left(\frac{2\pi}{T} kt\right) dt
+a_k &= \frac{2}{T}\int_{t_0}^{t_0+T}s(t)\textrm{cos}\left(\frac{2\pi}{T} kt\right) dt
 \newline
-b_k &= \frac{2}{T}\int_Ts(t)\textrm{sin}\left(\frac{2\pi}{T} kt\right) dt
+b_k &= \frac{2}{T}\int_{t_0}^{t_0+T}s(t)\textrm{sin}\left(\frac{2\pi}{T} kt\right) dt
 \end{align*}
 $$
 
@@ -237,11 +237,11 @@ c_k =
 \begin{array}{ll}
        \frac{1}{2} (a_k - ib_k) & k > 0 \\
        a_0 & k = 0 \\
-       \frac{1}{2} (a_{-k} - ib_{-k}) & k < 0 \\
+       \frac{1}{2} (a_{-k} + ib_{-k}) & k < 0 \\
 \end{array}
 \right.
 $$
-And there you have it, we have now derived the fourier series. One really important thing to note though, is that this only works for periodic signals, since the recreation is periodic with periodicity $T$. *Technically* it also works for functions that are only defined on the range $[t_0,t_1]$, but the recreation will then still be repeating for values of $t$ outside that range. This means that the fourier series cannot deal with signals that are defined over infinte time. To analyse functions that are either aperoidic (so non-repeating) or infinte in the input dimension, we must turn to the fourier transform.
+And there you have it, we have now derived the fourier series. One really important thing to note though, is that this only works for periodic signals, since the recreation is periodic with periodicity $T$. *Technically* it also works for functions that are only defined on the range $[t_0,t_1]$, but the recreation will then still be repeating for values of $t$ outside that range. This means that the fourier series cannot deal with signals that are defined over infinte time. To analyse functions that are either aperiodic (so non-repeating) or infinte in the input dimension, we must turn to the fourier transform.
 
 ## The Fourier transform
 So let's do it! One small heads up first though. The Fourier Transform does not fit into the tradition definition of the $L^2$ vector space, since it's set of basis vectors is $e^{iwt}$ for all values $t \in [-\infty,\infty]$. But we can still tease it out from the complex exponential definition of the Fourier Series, by considering the limiting behaviour as $T \rightarrow \infty$.
@@ -260,7 +260,7 @@ $$
 Tc_k &= \int_{-T/2}^{T/2} s(t) e^{-i k \Delta w t} dt
 \end{align*}
 $$
-Now, consider the limiting behaviour of the right hand side as we let $T \rightarrow \infty$. This means our integral is over infinite time, allowing our signal to be infinite in time. It also implies that $\Delta w$ becomes infinitely small, and so by calculus convention, we're going to rename it $dw$. We're then going to immediately get rid of it by defining a new continous variable $w = kdw$.
+Now, consider the limiting behaviour of the right hand side as we let $T \rightarrow \infty$. This means our integral is over infinite time, allowing our signal to be infinite in time. It also implies that $\Delta w$ becomes infinitely small, and so by calculus convention, we're going to rename it $dw$. We're then going to immediately get rid of it by defining a new continuous variable $w = kdw$.
 
 $$
 \begin{align*}
@@ -289,7 +289,7 @@ Again, consider the limiting behaviour as we let $T \rightarrow \infty$, such th
 $$
 s(t) = \frac{1}{2\pi} \sum_{k=-\infty}^{\infty} S(w) e^{i w t} dw
 $$
-The sum is the definition of the [Reimann Integral](https://en.wikipedia.org/wiki/Riemann_integral), so substituting the sum for an integral yields:
+The sum is the definition of the [Riemann Integral](https://en.wikipedia.org/wiki/Riemann_integral), so substituting the sum for an integral yields:
 $$
 s(t) = \frac{1}{2\pi} \int_{-\infty}^{\infty} S(w) e^{i w t} dw
 $$
@@ -299,7 +299,7 @@ s(t) = ℱ^{-1}[S(w)]
 $$
 
 ## Other Basis Functions
-Since Fourier Analysis is basically just projections of functions in the $L^2$ vectors space, why did we choose to use sines and cosines (or complex exponentials), and not some other infinte family of functions? For one, there is the whole physical intuition in terms of things like sound being a sum of pure tones, but there is also a good mathematical reason. The set of sines and cosines are naturally orthogonal for any choice of region $[t_0,t_1]$. This is not at all true for most other sets of basis functions you might choose, like the set of powers. Consider the set of functions in $L^2[t_0,t_1]$:
+Since Fourier Analysis is basically just projections of functions in the $L^2$ vectors space, why did we choose to use sines and cosines (or complex exponentials), and not some other infinite family of functions? For one, there is the whole physical intuition in terms of things like sound being a sum of pure tones, but there is also a good mathematical reason. The set of sines and cosines are naturally orthogonal for any choice of region $[t_0,t_1]$. This is not at all true for most other sets of basis functions you might choose, like the set of powers. Consider the set of functions in $L^2[t_0,t_1]$:
 $$
 f(t) \in [t^k], k \in \{ 0, 1, 2, ...\}
 $$
@@ -319,7 +319,7 @@ g(t) &= t^m
 &= \frac{t_1^{n+m+1}-t_0^{n+m+1}}{n+m+1}
 \end{align*}
 $$
-It should be fairly obvious that the above is, in fact, not equal to zero for any choice of $[t_0,t_1]$ and for $n \ne m$. 
+It should be fairly obvious that the above is, in fact, not equal to zero for every choice of $[t_0,t_1]$ and for every choice of $n \ne m$. (though it does hold for some, for example $\langle t^m, t^n \rangle=0$ on $[-1,1]$ when n+m is odd. The important point is that it does not hold for all choices.)
 
 It is possible to create an orthogonal basis of polynomials, but it will: 1) be a mess, and 2) depend on your choice of $[t_0,t_1]$. How you would go about it is beyond the scope of this blog post, but the eager reader may want to check out the [Gram-Schmidt process](https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process).
 
