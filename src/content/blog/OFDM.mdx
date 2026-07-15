@@ -1,0 +1,36 @@
+---
+title: "Reinventing Wireless Communications"
+description: "Exploring the concept of modern Digital Wireless Communication Systems"
+pubDate: "Jul 07 2026"
+heroImage: "../../assets/radio_towers.jpg"
+hidden: true
+---
+
+import Gif from "../../components/Gif.astro";
+
+I want this blog post to feel like a natural exploration of digital wireless communications, and for you to feel like you could've come up with these concepts yourself.
+
+# Communication Systems
+I feel like the best place to start is to consider what it is we want to accomplish in communication systems. 
+
+Let's consider a real example, AM radio. The signal starts out as sound, in the form of changes in airpressure. This gets picked up by a microphone, which turns the airpressure into an electrical signal. If we want to actually broadcast this signal far, and to many users, we're gonna want to do it wirelessly. And here, we have essentially two options; use sound or use light. The first option is a speaker, and thus not really appropriate for long-range broadcasting. Thus, we will choose the second option, light.
+
+But how do you encode an electrical signal onto light? We could just attempt to send the signal directly as light, but we'll discovery very quickly that the resulting light wave would have a wavelength on the order of hundreds of kilometers, meaning we'd need an antenna of roughly that size. Instead, we want to somehow imprint the information of the signal onto a light wave of a much higher frequency. One simple option is to simply use the signal as the amplitude of a pure frequency of light:
+$$
+x(t)=s(t)\cdot\mathrm{cos}(2\pi f_c t + \phi)
+$$
+Where s(t) is the signal we picked up from the microphone, $f_c$ is the "carrier" frequency, meaning the frequency of light we're imprinting upon, $\phi$ is an initial phase shift, and x(t) being the resulting *modulated* signal. This is, essentially, one version of AM, Analog Modulation, radio. 
+
+Generally, there are three different ways to imprint a signal onto a pure carrier, amplitude modulation, as we just did, phase modulation, where $\phi(t)$ carries the information, and frequency modulation, where $f_c(t)$ carries the information. This is also what FM radio is. However, these are all analog modulations, which is all well and good for systems which are modeled well by continuous signals, but we live in the digital world today, so we need to take a different approach.
+
+## Digital Modulation
+Digital modulation differs from analog by having a discrete set of "symbols", which get modulated onto a carrier. Same as before, there are three ways to imprint our information, amplitude, phase and frequency. I wont cover digital frequency modulation in this blog post, as it's not really used in high throughput modern systems. However, before we get too deep in the weeds, let's consider a simple modulation scheme, similar to AM radio.
+
+First we must map our digital information to actual signal values, so let's say a '1' is represented by 1V, and a '0' by -1V. Our signal then becomes:
+
+$$
+x(t)=\begin{cases}
+\mathrm{cos}(2\pi f_c t + \phi) & \qquad \mathrm{if } \; s(t) = 1 \\
+-\mathrm{cos}(2\pi f_c t + \phi) & \qquad \mathrm{if } \; s(t) = 0
+\end{cases}
+$$
