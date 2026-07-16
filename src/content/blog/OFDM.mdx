@@ -19,21 +19,64 @@ But how do you encode an electrical signal onto light? We could just attempt to 
 $$
 x(t)=s(t)\cdot\mathrm{cos}(2\pi f_c t + \phi)
 $$
-Where s(t) is the signal we picked up from the microphone, $f_c$ is the "carrier" frequency, meaning the frequency of light we're imprinting upon, $\phi$ is an initial phase shift, and x(t) being the resulting *modulated* signal. This is, essentially, one version of AM, Analog Modulation, radio. 
+Where s(t) is the signal we picked up from the microphone, $f_c$ is the "carrier" frequency, meaning the frequency of light we're imprinting upon, $\phi$ is an initial phase shift, which will be assumed to be zero going forwards, and x(t) being the resulting *modulated* signal. This is, essentially, one version of AM, Analog Modulation, radio. 
 
-Generally, there are three different ways to imprint a signal onto a pure carrier, amplitude modulation, as we just did, phase modulation, where $\phi(t)$ carries the information, and frequency modulation, where $f_c(t)$ carries the information. This is also what FM radio is. However, these are all analog modulations, which is all well and good for systems which are modeled well by continuous signals, but we live in the digital world today, so we need to take a different approach.
+Generally, there are three different ways to imprint a signal onto a pure carrier, amplitude modulation, as we just did, phase modulation, where $\phi(t)$ carries the information, and frequency modulation, where $f_c(t)$ carries the information. This is also what FM radio is. To begin with, we will just consider amplitude modulation, and once we introduce digital modulations then pulse modulation will also be considered. Lastly, while there are some applications where frequency modulation is used, both in analog and digital signals, they will not be discussed here.
+
+Before we start look at how to demodumate our signal, we need to take a quick into complex numbers, and especially complex exponentials.
+
+## The Role of the Complex Exponential
+I'm writing this next section with the assumption that you have at least a general idea of how complex numbers work. If not, there are lots of great resources out there! Additionally, I am just going to introduce the complex exponential without justifying why it's true; as this is really not relevant for this discussion. If you want a better introduction, check out this [3Blue1Brown video](https://www.youtube.com/watch?v=v0YEaeIClKY)!
+
+Without further ado, here is the complex exponential:
+$$
+\mathrm{e}^{it}=\mathrm{cos}(t)+i\mathrm{sin}(t)
+$$
+The reason we care about it so much has to do with the Fourier transform. [See my other blog post for an introduction](https://hannah.cramt.dk/blog/fourier_linear_algebra/)! This next part might feel slightly unsatisfactory for some, but proving specific properties of the Fourier transform is, 1. beyond the scope of this blog post, and 2. kind of uninteresting. Expressing sine and cosine in terms of the complex exponential yields:
+$$
+\mathrm{cos}(t)=\frac{1}{2}(e^{i t}+e^{-i t})
+$$
+$$
+\mathrm{sin}(t)=\frac{1}{2i}(e^{i t}-e^{-i t})
+$$
+
+Assuming we have some signal in time, $s(t)$, which is in $L^2$, which just means it has finite energy, then you can take the Fourier transform of it to get:
+$$
+S(f)=\mathcal{F\{s(t)\}}
+$$
+$S(f)$ tells you something about the strength of different pure sines and cosines of different frequencies for the entire signal. The property of the Fourier transform we need is
+$$
+\mathcal{F\{s(t)\cdot e^{2\pi i f_c t}\}}=S(f-f_c)
+$$
+So multiplication by a complex exponential with frequency $f_c$ causes a shift in the Fourier transform of your signal. And multiplication by cosine causes two copies shifted by $\pm f_c$ and scaled down by two:
+$$
+\mathcal{F\{s(t)\cdot \mathrm{cos}(2\pi f_c t)\}}=\frac{1}{2}(S(f-f_c)+S(f+f_c))
+$$
+Multiplying by cosine again causes the two splits to split again;
+$$
+\mathcal{F\{s(t)\cdot \mathrm{cos}(2\pi f_c t)^2\}}=\frac{1}{4}(2S(f)+S(f-2f_c)+S(f+2f_c))
+$$
+Now, if we were somehow able to get rid of these far-out copies of the signal, we could reconstruct $s(t)$. However, there is one small complication we must first discuss, name the bandwidth of our signal $s(t)$. For us to be able to use this type of modulation, our signal must be band-limited, meaning there exists a frequency B for which:
+$$
+S(f) = 0 \qquad \mathrm{if} \;|f|\ > B/2
+$$
+The smallest B for which the above equation holds is called the bandwidth of the signal. If such a B does not exist (meaning the signal extends infinity in frequency), then the modulation scheme we've chosen wont work, as the copies will overlap. Additionally, it is fairly easy to show that $f_c > B/2$ is sufficient to guarantee that we can demodulate our signal. However, we still need to actually remove these high-frequency copies of our signal, and this can be accomplished with something called a low-pass filter. Without going through it in massive detail, they simply attenuate components with frequencies above a certain frequency, while allowing those below to pass. And as such, we can retrieve the original analog signal from the modulated one, by multiplying by the same cosine, and passing it through a low-pass filter. One practical note on real low-pass filters, is that they are not brick-wall style blockers, and so in practice you want more distance between the upper occupied frequencies, and the carrier frequency.
+
+However, this is just analog signals, and since most of the world today is digital, we need to change things up a bit.
+
 
 ## Digital Modulation
-Digital modulation differs from analog by having a discrete set of "symbols", which get modulated onto a carrier. Same as before, there are three ways to imprint our information, amplitude, phase and frequency. I wont cover digital frequency modulation in this blog post, as it's not really used in high throughput modern systems. However, before we get too deep in the weeds, let's consider a simple modulation scheme, similar to AM radio.
+Digital modulation differs from analog by having a discrete set of "symbols", which get modulated onto a carrier. Same as before, there are three ways to imprint our information, amplitude, phase and frequency. I won't cover digital frequency modulation in this blog post, as it's not really used in high throughput modern systems. However, before we get too deep in the weeds, let's consider a simple modulation scheme, similar to AM radio.
 
 First we must map our digital information to actual signal values, so let's say a '1' is represented by 1V, and a '0' by -1V. Our signal then becomes:
 
 $$
 x(t)=\begin{cases}
-\mathrm{cos}(2\pi f_c t + \phi) & \qquad \mathrm{if } \; s(t) = 1 \\
--\mathrm{cos}(2\pi f_c t + \phi) & \qquad \mathrm{if } \; s(t) = 0
+\mathrm{cos}(2\pi f_c t + \phi) & \qquad \mathrm{if} \; s(t) = 1 \\
+-\mathrm{cos}(2\pi f_c t + \phi) & \qquad \mathrm{if} \; s(t) = 0
 \end{cases}
 $$
-In general, there are many different symbol mappings used, and one, named MQAM, will be introduced further on.
+This symbol mapping is called Binary Phase-Shift Keying, BPSK, and is one of the simplest digital symbol mappings. In general, many different symbol mappings used, and one, named MQAM, will be introduced further on.
 
-As you might be able to intuit, this description is not only discrete in levels, but also in time. We must impose some duration of symbol before we'd be able to decode it, otherwise it would be impossible to separate when identical symbols are transmitted in a row. Let's call this quantity $T_s$. 
+As you might be able to intuit, this description is not only discrete in levels, but also in time. We must impose some duration of symbol before we'd be able to decode it, otherwise it would be impossible to separate when identical symbols are transmitted in a row. Let's call this quantity $T_s$.
+
