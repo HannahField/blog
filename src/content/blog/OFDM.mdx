@@ -92,7 +92,7 @@ Where $g(t)$ is a pulse shaping function, such as a [Root-Raised Cosine](https:/
 Before considering the main issue with this approach to digital wireless transmission, I will first introduce some more sophisticated symbol shaping techniques.
 
 ### Symbol shaping
-One interesting property of the Fourier transform is that the transform of a purely real signal (so no imaginary part) is always conjugate symmetric, meaning $S(f)=\S^*(-f)$, where the $*$ means the complex conjugate. This means that any purely real signal is only effectively using half of it's occupied bandwidth. While there are several solutions to this issue, the one we're gonna consider is complex modulation schemes, i.e. allowing our signal to be complex. 
+One interesting property of the Fourier transform is that the transform of a purely real signal (so no imaginary part) is always conjugate symmetric, meaning $S(f)=S^*(-f)$, where the $*$ means the complex conjugate. This means that any purely real signal is only effectively using half of it's occupied bandwidth. While there are several solutions to this issue, the one we're gonna consider is complex modulation schemes, i.e. allowing our digital baseband signal to be complex. 
 $$
 s(t)=s_I(t) + i s_Q(t)
 $$
@@ -104,7 +104,7 @@ To demodulate, we split the signal and multiply each copy by cos and sin respect
 $$
 \begin{cases}
 x(t)\mathrm{cos}(2\pi f_c t)=\frac{1}{2}s_I(1+\mathrm{cos}(4\pi f_c t))+\frac{1}{2}s_Q\mathrm{sin}(4\pi f_c t) &\\
-x(t)\mathrm{sin}(2\pi f_c t)=\frac{1}{2}s_Q(1-\mathrm{cos}(4\pi f_c t))+\frac{1}{2}s_I\mathrm{sin}(4\pi f_c t) &
+x(t)\mathrm{sin}(2\pi f_c t)=-\frac{1}{2}s_Q(1+\mathrm{cos}(4\pi f_c t))+\frac{1}{2}s_I\mathrm{sin}(4\pi f_c t) &
 \end{cases}
 $$
 And then using a low-pass filter to remove the high-frequency components. For those curious, this works because sin and cosine are mutually orthogonal, as shown in [my previous blog post](https://hannah.cramt.dk/blog/fourier_linear_algebra/).
@@ -120,9 +120,9 @@ In general, the greater the distance between points, the better the resistance t
 However, this simple sort of digital modulation, which is called a single-carrier scheme, has issues when it comes to high-throughput systems. 
 
 ### Intersymbol Interference
-Imagine sitting in a room with a transmitter-receiver pair. If you transmit a single pulse, for example a single modulated symbol. Listening at the receiver for this pulse, you'll notice two things. Firstly, it takes a bit of time from when it was transmitted, to when you see it. This is due to the finite speed of light, which is roughly 300'000 kilometers per second. However, there is a second observation you'll likely make, and one that has far reaching consequences. You see several attenuated and delayed copies of the pulse. In wireless communications we have a word for this concept, multipath components, and we generally associate one number, the Delay Spread, with how much the signal gets smeared. It's a power weighted average of the arrival time of all components, and has symbol $\sigma_{T_m}$. 
+Imagine sitting in a room with a transmitter-receiver pair. If you transmit a single pulse, for example a single modulated symbol. Listening at the receiver for this pulse, you'll notice two things. Firstly, it takes a bit of time from when it was transmitted, to when you see it. This is due to the finite speed of light, which is roughly 300'000 kilometers per second. However, there is a second observation you'll likely make, and one that has far reaching consequences. You see several attenuated and delayed copies of the pulse. In wireless communications we have a word for this concept, multipath components, and we generally associate one number, the Delay Spread, with how much the signal gets smeared. It's the Root Mean Square of the arrival power at different times of all multipath components, and has symbol $\sigma_{T_m}$. 
 
-Now consider that we repeat this pulse with a period of $T_s$, which is on the order of the delay spread. What we'll see is that the pulses will start to become indistinguishable, as the symbols start to interferece with each. This is called Intersymbol Interference (ISI), and it's a major problem in wireless communications. For many indoor environments, the delay spread is generally on the order of [100 ns](https://www.ieee802.org/11/Documents/DocumentArchives/1997_docs/71252.pdf). A general rule of thumb is that your symbol time, $T_s$, should not exceed 10 times the delay spread of your environment. This means we're limited to a symbol rate of:
+Now consider that we repeat this pulse with a period of $T_s$, which is on the order of the delay spread. What we'll see is that the pulses will start to become indistinguishable, as the symbols start to interferece with each. This is called Intersymbol Interference (ISI), and it's a major problem in wireless communications. For many indoor environments, the delay spread is generally on the order of [100 ns](https://www.ieee802.org/11/Documents/DocumentArchives/1997_docs/71252.pdf). A general rule of thumb is that your symbol time, $T_s$, should be greater than 10 times the delay spread of your environment. This means we're limited to a symbol rate of:
 $$
 T_{s_{\mathrm{max}}}\approx \frac{1}{10\cdot 100\; \mathrm{ns}}= 1\; \mathrm{MHz}
 $$
